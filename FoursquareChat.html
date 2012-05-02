@@ -1,0 +1,28 @@
+ <head>
+<title>Foursquare Chat!</title>
+</head>
+<body>
+{{> login}}
+{{> myrooms}}
+{{> entry}}
+</body>
+<template name="myrooms">
+ Welcome to {{roomName}}
+{{#each messages}}
+
+		<div>{{author}} says {{content}}</div>
+
+{{/each}}
+</template>
+
+<template name="entry">
+  <p>
+    <span>{{userName}}</span>
+    <input type="text" id="messageBox" name="message" placeholder="What do you want to say?">
+  </p>
+</template> 
+
+<template name="login">
+	<div class="foursquare">Login with Foursquare</div>
+</template>
+

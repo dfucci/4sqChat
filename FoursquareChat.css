@@ -1,0 +1,8 @@
+/* CSS declarations go here */
+#chat {
+  height: 300px;
+  width: 440px;
+  overflow: scroll;
+  padding: 10px 10px 40px 10px;
+  border: 1px black solid;
+}
