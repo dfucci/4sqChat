@@ -2,21 +2,22 @@ Rooms = new Meteor.Collection 'Rooms'
 
 if Meteor.is_client
   code = window.location.href.split('=')[1]
-  if not code?
-
-  else
-    $.get "https://api.foursquare.com/v2/users/self?oauth_token=#{code}", (data)-> 
-      user = data.response.user.firstName
-      venueName = data.response.user.checkins.items[0].venue.name
-      venueid = data.response.user.checkins.items[0].venue.id
-      Session.set 'name', user
-      Session.set 'venueName', venueName
-      Session.set 'venueID', venueid
-  #console.log Rooms.find({venueid:'4bc464352a89ef3b652ef688'}).count() 
-      vid = Session.get 'venueID'
-      venueName = Session.get 'venueName'
-      if  Rooms.find({venueid:vid}).count() is 0
-        Rooms.insert(name:venueName,venueid:vid, messages:[]) 
+  Template.content.logged = ->
+    code?
+  $.get "https://api.foursquare.com/v2/users/self?oauth_token=#{code}", (data)-> 
+    user = data.response.user.firstName
+    venueName = data.response.user.checkins.items[0].venue.name
+    venueid = data.response.user.checkins.items[0].venue.id
+    Session.set 'name', user
+    Session.set 'venueName', venueName
+    Session.set 'venueID', venueid
+#console.log Rooms.find({venueid:'4bc464352a89ef3b652ef688'}).count() 
+    vid = Session.get 'venueID'
+    venueName = Session.get 'venueName'
+    if  Rooms.find({venueid:vid}).count() is 0
+      Rooms.insert(name:venueName,venueid:vid, messages:[]) 
+    # Template.content.logged = ->
+    #   true
   Template.myrooms.roomName = ->
       Session.get 'venueName'
   Template.entry.userName = ->
@@ -32,11 +33,13 @@ if Meteor.is_client
     'keyup #messageBox' : (event)->
       if event.type == "keyup" && event.which == 13 # [ENTER]
         message = $('#messageBox')
+        authorName = Session.get 'name'
         msgObj=
-          author: 'Davide'
+          author: authorName
           content: message.val()
         id = Session.get 'venueID'
         Rooms.update(venueid:id, {$push:{messages: msgObj}})
+        $('#messageBox').val('')
 
   Template.login.events =
     'click' : (event)->
